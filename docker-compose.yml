@@ -12,8 +12,8 @@ services:
     ports:
       - "${DB_PORT}:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./englishDiplom.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - mnt/postgres_data:/var/lib/postgresql/data
+      - mnt/eng_module_25-12/englishDiplom.sql:/docker-entrypoint-initdb.d/01-init.sql
     networks:
       - english_learning_network
     healthcheck:
