@@ -3,7 +3,7 @@ version: '3.7'
 services:
   db:
     image: postgres:15-alpine
-    container_name: english_learning_db
+    container_name: eng_learning_db
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${DB_USER}
@@ -12,8 +12,8 @@ services:
     ports:
       - "${DB_PORT}:5432"
     volumes:
-      - mnt/postgres_data:/var/lib/postgresql/data
-      - mnt/eng_module_25-12/englishDiplom.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - postgres_data:/var/lib/postgresql/data
+      - /mnt/englishDiplom.sql:/docker-entrypoint-initdb.d/01-init.sql
     networks:
       - english_learning_network
     healthcheck:
@@ -24,15 +24,15 @@ services:
 
   backend:
     build:
-      context: ./backend
+      context: /mnt/tank/apps/english-learning/backend
       dockerfile: Dockerfile
-    container_name: english_learning_api
+    container_name: eng_learning_api
     restart: unless-stopped
     ports:
       - "${API_PORT}:8000"
     volumes:
-      - ./backend:/app
-      - ./backend/uploads:/app/uploads
+      - /mnt/backend:/app
+      - /mnt/backend/uploads:/app/uploads
     environment:
       DB_HOST: db
       DB_PORT: 5432
@@ -58,11 +58,11 @@ services:
 
   frontend:
     build:
-      context: ./frontend
+      context: /mnt/frontend
       dockerfile: Dockerfile
       args:
         VITE_API_URL: ${API_URL}/api
-    container_name: english_learning_frontend
+    container_name: eng_learning_frontend
     restart: unless-stopped
     ports:
       - "${FRONTEND_PORT}:80"
@@ -75,7 +75,7 @@ services:
 
   adminer:
     image: adminer:latest
-    container_name: english_learning_adminer
+    container_name: eng_learning_adminer
     restart: unless-stopped
     ports:
       - "${ADMINER_PORT}:8080"
